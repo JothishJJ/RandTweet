@@ -1,11 +1,13 @@
-from typing import Literal
 import tweepy
 from dotenv import load_dotenv
 import os
+import requests
 
 
 def main():
     print("This is the main app")
+    print(getJoke()["question"])
+    print(getJoke()["punchline"])
 
 
 def createTweet(
@@ -34,6 +36,15 @@ def loadClient():
     )
 
     return client
+
+
+def getJoke():
+    jokes_api_url = "https://backend-omega-seven.vercel.app/api/getjoke"
+    respose = requests.get(url=jokes_api_url)
+
+    joke = respose.json()
+
+    return joke[0]
 
 
 # Running the main app
