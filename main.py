@@ -6,21 +6,13 @@ import requests
 
 def main():
     print("This is the main app")
-    print(getJoke()["question"])
-    print(getJoke()["punchline"])
 
-
-def createTweet(
-    text: str, poll_options: list[str] | None, poll_duration_in_days: int | None
-):
-    client = loadClient()
-
-    # Convert poll duration to minutes
-    poll_duaration = poll_duration_in_days * 24 * 31
-
-    client.create_tweet(
-        text=text, poll_options=poll_options, poll_duration_minutes=poll_duaration
-    )
+    joke = get_joke()
+    quote = get_quote()
+    print(joke["question"])
+    print(joke["punchline"])
+    print(quote["content"])
+    print(quote["author"])
 
 
 def loadClient():
@@ -38,13 +30,36 @@ def loadClient():
     return client
 
 
-def getJoke():
+def createTweet(
+    text: str, poll_options: list[str] | None, poll_duration_in_days: int | None
+):
+    client = loadClient()
+
+    # Convert poll duration to minutes
+    poll_duaration = poll_duration_in_days * 24 * 31
+
+    client.create_tweet(
+        text=text, poll_options=poll_options, poll_duration_minutes=poll_duaration
+    )
+
+
+def get_joke():
     jokes_api_url = "https://backend-omega-seven.vercel.app/api/getjoke"
     respose = requests.get(url=jokes_api_url)
 
     joke = respose.json()
 
     return joke[0]
+
+
+def get_quote():
+    quotes_api_url = "https://api.quotable.io/random?tags=technology"
+
+    response = requests.get(url=quotes_api_url)
+
+    quote = response.json()
+
+    return quote
 
 
 # Running the main app
