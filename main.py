@@ -2,45 +2,37 @@ import tweepy
 from dotenv import load_dotenv
 import os
 import requests
+import random
+
+# Loads the environment files form .env
+load_dotenv()
+
+bearer_token = os.environ["BEARER_TOKEN"]
+api_key = os.environ["API_KEY"]
+api_secret = os.environ["API_KEY_SECRET"]
+access_token = os.environ["ACCESS_TOKEN"]
+access_token_secret = os.environ["ACCESS_TOKEN_SECRET"]
+
+client = tweepy.Client(
+    bearer_token,
+    api_key,
+    api_secret,
+    access_token,
+    access_token_secret,
+)
 
 
 def main():
-    print("This is the main app")
+    print("Tweeting...\n")
 
-    joke = get_joke()
-    quote = get_quote()
-    print(joke["question"])
-    print(joke["punchline"])
-    print(quote["content"])
-    print(quote["author"])
+    random_number = random.random()
 
-
-def loadClient():
-    # Loads the environment files form .env
-    load_dotenv()
-
-    client = tweepy.Client(
-        bearer_token=os.environ["BEARER_TOKEN"],
-        consumer_key=os.environ["API_KEY"],
-        consumer_secret=os.environ["API_KEY_SECRET"],
-        access_token=os.environ["ACCESS_TOKEN"],
-        access_token_secret=os.environ["ACCESS_TOKEN_SECRET"],
-    )
-
-    return client
-
-
-def createTweet(
-    text: str, poll_options: list[str] | None, poll_duration_in_days: int | None
-):
-    client = loadClient()
-
-    # Convert poll duration to minutes
-    poll_duaration = poll_duration_in_days * 24 * 31
-
-    client.create_tweet(
-        text=text, poll_options=poll_options, poll_duration_minutes=poll_duaration
-    )
+    if random_number < 0.5:
+        print("Tweeting a joke")
+        tweet_joke(get_joke())
+    else:
+        print("Tweeting a quote")
+        tweet_quote(get_quote())
 
 
 def get_joke():
@@ -60,6 +52,18 @@ def get_quote():
     quote = response.json()
 
     return quote
+
+
+def tweet_joke(joke):
+    tweet = f"{joke['question']}\n\n\n{joke['punchline']}"
+
+    client.create_tweet(text=tweet)
+
+
+def tweet_quote(quote):
+    tweet = f'"{quote["content"]}"\n\t\t-{quote["author"]}'
+
+    client.create_tweet(text=tweet)
 
 
 # Running the main app
