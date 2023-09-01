@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 import requests
 import random
+import schedule
 
 # Loads the environment files form .env
 load_dotenv()
@@ -66,5 +67,4 @@ def tweet_quote(quote):
     client.create_tweet(text=tweet)
 
 
-# Running the main app
-main()
+schedule.every().day.at("00:00").do(main)
