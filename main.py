@@ -36,12 +36,12 @@ def main():
 
 
 def get_joke():
-    jokes_api_url = "https://backend-omega-seven.vercel.app/api/getjoke"
+    jokes_api_url = "https://v2.jokeapi.dev/joke/Programming?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=twopart"
     respose = requests.get(url=jokes_api_url)
 
     joke = respose.json()
 
-    return joke[0]
+    return joke
 
 
 def get_quote():
@@ -55,13 +55,13 @@ def get_quote():
 
 
 def tweet_joke(joke):
-    tweet = f"{joke['question']}\n\n\n{joke['punchline']}"
+    tweet = f"{joke['setup']}\n\n\n{joke['delivery']}"
 
     client.create_tweet(text=tweet)
 
 
 def tweet_quote(quote):
-    tweet = f'"{quote["content"]}"\n\t\t-{quote["author"]}'
+    tweet = f'"{quote["content"]}"\n\t\t\t-{quote["author"]}'
 
     client.create_tweet(text=tweet)
 
